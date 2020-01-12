@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTableRenderToExcel.cs" />
+    <Compile Include="emCRUD.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="IPSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
