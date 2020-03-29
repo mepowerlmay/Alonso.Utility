@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -31,6 +32,14 @@ namespace Alonso.Utility
         public static int StringToInt(string str, int i = 0) {
             int.TryParse(str, out i);
             return i;
+        }
+
+        public static string ChineseToWestSDate(string sDate)
+        {
+         
+            DateTime dt = DateTime.ParseExact(sDate, "yyyMMdd", CultureInfo.InvariantCulture).AddYears(1911);
+
+            return dt.ToString("yyyy/MM/dd");
         }
     }
 }
