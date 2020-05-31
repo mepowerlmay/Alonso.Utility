@@ -28,6 +28,74 @@ namespace Alonso.Utility
     public static partial class Tool
     {
         /// <summary>
+        /// 轉碼http 將網址做轉換此版OK絕對順暢 encode轉http的編碼 http://tw.google?A=檔案名稱做轉換
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string UrlEncode(string input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+            string stringToEscape = input;
+            string input2 = string.Empty;
+            int num = input.IndexOf('?');
+            if (num >= 0)
+            {
+                input2 = input.Substring(num).TrimStart('?');
+                stringToEscape = input.Remove(num);
+            }
+            List<KeyValuePair<string, string>> list = SplitToKeyValuePairs(input2, '&', '=');
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (KeyValuePair<string, string> item in list)
+            {
+                stringBuilder.AppendFormat("{0}={1}&", Uri.EscapeDataString(item.Key), Uri.EscapeDataString(item.Value));
+            }
+            stringBuilder.Remove(stringBuilder.Length - 1, 1);
+            string arg = Uri.EscapeUriString(stringToEscape);
+            return $"{arg}?{stringBuilder.ToString()}";
+        }
+
+        /// <summary>
+        /// 解碼 將網址做轉換此版OK絕對順暢 encode轉http的解碼 http://tw.google?A=檔案名稱做轉換
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string UrlDecode(string input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+            return Uri.UnescapeDataString(input.Replace('+', ' '));
+        }
+        public static List<KeyValuePair<string, string>> SplitToKeyValuePairs(string input, char itemSeparator, char keyValueSeparator)
+        {
+            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
+            string[] array = input.Split(new char[1]
+            {
+            itemSeparator
+            }, StringSplitOptions.RemoveEmptyEntries);
+            string[] array2 = array;
+            foreach (string text in array2)
+            {
+                string[] array3 = text.Split(keyValueSeparator);
+                if (array3.Length >= 2)
+                {
+                    KeyValuePair<string, string> item = new KeyValuePair<string, string>(array3[0], array3[1]);
+                    list.Add(item);
+                }
+                else if (array3.Length == 1)
+                {
+                    KeyValuePair<string, string> item = new KeyValuePair<string, string>(array3[0], string.Empty);
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
         /// Copy文件夹
         /// </summary>
         /// <param name="sPath">源文件夹路径</param>
