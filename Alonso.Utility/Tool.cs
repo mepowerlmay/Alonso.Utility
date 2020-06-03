@@ -2465,6 +2465,98 @@ namespace Alonso.Utility
             return true;
         }
 
+        /// <summary>输出硬盘文件，提供下载
+        /// 
+        /// </summary>  
+        /// <param name="_fileName">下载文件名</param>
+        /// <param name="_URL">带文件名下载路径</param>
+        /// <param name="_speed">每秒允许下载的字节数</param>
+        /// <returns>返回是否成功</returns>
+        public static bool DownloadURLFile(string _fileName, string _URL, long _speed)
+        {
+            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(_URL);
+            HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+
+            HttpRequest _Request = System.Web.HttpContext.Current.Request;
+            HttpResponse _Response = System.Web.HttpContext.Current.Response;
+
+            System.IO.Stream dataStream = httpResponse.GetResponseStream();  // 取資料流
+            byte[] buffer = new byte[10240 * 10];
+
+            try
+            {
+
+
+                try
+                {
+                    _Response.AddHeader("Accept-Ranges", "bytes");
+                    _Response.Buffer = false;
+                    long fileLength = httpResponse.ContentLength;
+                    long startBytes = 0;
+
+                    int pack = 10240; //10K bytes
+                                      //int sleep = 200;   //每秒5次   即5*10K bytes每秒
+                    int sleep = (int)Math.Floor((decimal)1000 * pack / _speed) + 1;
+                    if (_Request.Headers["Range"] != null)
+                    {
+                        _Response.StatusCode = 206;
+                        string[] range = _Request.Headers["Range"].Split(new char[] { '=', '-' });
+                        startBytes = Convert.ToInt64(range[1]);
+                    }
+                    _Response.AddHeader("Content-Length", (fileLength - startBytes).ToString());
+                    if (startBytes != 0)
+                    {
+                        _Response.AddHeader("Content-Range", string.Format(" bytes {0}-{1}/{2}", startBytes, fileLength - 1, fileLength));
+                    }
+                    _Response.AddHeader("Connection", "Keep-Alive");
+                    _Response.ContentType = "application/octet-stream";
+                    _Response.Charset = "UTF-8";
+                    _Response.ContentEncoding = Encoding.UTF8;
+
+                    HttpBrowserCapabilities bc = _Request.Browser;
+                    string browser = bc.Browser.ToString();
+                    string filename = browser.ToLower().Contains("ie") ? HttpUtility.UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(_fileName)) : _fileName;
+
+                    _Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
+
+
+                    int maxCount = (int)Math.Floor((decimal)(fileLength - startBytes) / pack) + 1;
+                    int size = 0;
+                    for (int i = 0; i < maxCount; i++)
+                    {
+                        if (_Response.IsClientConnected)
+                        {
+                            size = dataStream.Read(buffer, 0, buffer.Length);
+                            if (size > 0)
+                            {
+                                _Response.OutputStream.Write(buffer, 0, size);
+                                Thread.Sleep(sleep);
+                            }
+                        }
+                        else
+                        {
+                            i = maxCount;
+                        }
+                    }
+                    _Response.End();
+                }
+                catch
+                {
+                    return false;
+                }
+                finally
+                {
+
+                }
+
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+            return true;
+        }
+
         /// <summary>从XLS文件读取到DataTable中
         /// 
         /// </summary>
