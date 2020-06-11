@@ -23,6 +23,20 @@ namespace Alonso.Utility
             return d;
         }
 
+
+        /// <summary>
+        /// 字符串转为浮点数
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="d">默认值0</param>
+        /// <returns></returns>           
+        public static decimal StringToDecimal(string str, decimal d = 0)
+        {
+
+            decimal.TryParse(str, out d);
+            return d;
+        }
+
         /// <summary>
         /// 字符串转为整型
         /// </summary>
