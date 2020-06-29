@@ -2423,6 +2423,7 @@ namespace Alonso.Utility
                     _Response.ContentType = "application/octet-stream";
                     _Response.Charset = "UTF-8";
                     _Response.ContentEncoding = Encoding.UTF8;
+                    _Response.HeaderEncoding = System.Text.Encoding.Default;
 
                     HttpBrowserCapabilities bc = _Request.Browser;
                     string browser = bc.Browser.ToString();
