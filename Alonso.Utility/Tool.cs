@@ -70,6 +70,8 @@ namespace Alonso.Utility
             }
             return Uri.UnescapeDataString(input.Replace('+', ' '));
         }
+
+
         public static List<KeyValuePair<string, string>> SplitToKeyValuePairs(string input, char itemSeparator, char keyValueSeparator)
         {
             List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
