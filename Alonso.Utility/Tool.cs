@@ -2382,7 +2382,6 @@ namespace Alonso.Utility
             return code;
 
         }
-
         /// <summary>输出硬盘文件，提供下载
         /// 
         /// </summary>  
@@ -2406,7 +2405,7 @@ namespace Alonso.Utility
                     long startBytes = 0;
 
                     int pack = 10240; //10K bytes
-                    //int sleep = 200;   //每秒5次   即5*10K bytes每秒
+                                      //int sleep = 200;   //每秒5次   即5*10K bytes每秒
                     int sleep = (int)Math.Floor((decimal)1000 * pack / _speed) + 1;
                     if (_Request.Headers["Range"] != null)
                     {
@@ -2423,11 +2422,11 @@ namespace Alonso.Utility
                     _Response.ContentType = "application/octet-stream";
                     _Response.Charset = "UTF-8";
                     _Response.ContentEncoding = Encoding.UTF8;
-                    _Response.HeaderEncoding = System.Text.Encoding.Default;
 
                     HttpBrowserCapabilities bc = _Request.Browser;
                     string browser = bc.Browser.ToString();
-                    string filename = browser.ToLower().Contains("ie") ? HttpUtility.UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(_fileName)) : _fileName;
+                    bool IsIE = browser.ToLower().Contains("ie") || browser.ToLower().Contains("internetexplorer") || browser.ToLower().Contains("chrome");
+                    string filename = IsIE ? HttpUtility.UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(_fileName)) : _fileName;
 
                     _Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
 
@@ -2705,6 +2704,9 @@ namespace Alonso.Utility
                 }
             }
         }
+
+
+   
     }
 }
 
