@@ -27,6 +27,40 @@ namespace Alonso.Utility
     /// </summary>
     public static partial class Tool
     {
+	    
+	/// <summary>
+        /// 取所有資料夾
+        /// </summary>
+        /// <param name="rootPath"></param>
+        /// <param name="GroupFiles"></param>
+        public static void GetAllDirectories(string rootPath, List<string> GroupFold)
+        {
+            string[] subPaths = System.IO.Directory.GetDirectories(rootPath);//得到所有子目錄
+            foreach (string path in subPaths)
+            {
+                GroupFold.Add(path);
+                GetAllDirectories(path, GroupFold);//對每一個字目錄做與根目錄相同的操作:即找到子目錄並將當前目錄的檔名存入List
+            }
+        }
+        /// <summary>
+        /// 取所有資料夾內的檔案
+        /// </summary>
+        /// <param name="rootPath"></param>
+        /// <param name="GroupFiles"></param>
+      public static  GetAllDirectFiles(string rootPath, List<string> GroupFiles)
+        {
+            string[] subPaths = System.IO.Directory.GetDirectories(rootPath);//得到所有子目錄
+            foreach (string path in subPaths)
+            {
+                GetAllDirectFiles(path, GroupFiles);//對每一個字目錄做與根目錄相同的操作:即找到子目錄並將當前目錄的檔名存入List
+            }
+            string[] files = System.IO.Directory.GetFiles(rootPath);
+            foreach (string file in files)
+            {
+                GroupFiles.Add(file);//將當前目錄中的所有檔案全名存入檔案List
+            }
+        }
+	    
         /// <summary>
         /// 轉碼http 將網址做轉換此版OK絕對順暢 encode轉http的編碼 http://tw.google?A=檔案名稱做轉換
         /// </summary>
