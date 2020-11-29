@@ -47,7 +47,7 @@ namespace Alonso.Utility
         /// </summary>
         /// <param name="rootPath"></param>
         /// <param name="GroupFiles"></param>
-      public static  GetAllDirectFiles(string rootPath, List<string> GroupFiles)
+      public static  void GetAllDirectFiles(string rootPath, List<string> GroupFiles)
         {
             string[] subPaths = System.IO.Directory.GetDirectories(rootPath);//得到所有子目錄
             foreach (string path in subPaths)
